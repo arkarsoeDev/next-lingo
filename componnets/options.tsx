@@ -13,14 +13,14 @@ const Options = ({ locale }: { locale: string }) => {
     redirect(newRoute)
   }
 
-  useEffect(() => {
-    const countryCode = getCountryCodeFromPath(currentRoute) || 'en'
+  // useEffect(() => {
+  //   const countryCode = getCountryCodeFromPath(currentRoute) || 'en'
 
-    if (countryCode !== locale) {
-      const newRoute = currentRoute.replace(countryCode, locale)
-      redirect(newRoute)
-    }
-  }, [])
+  //   if (countryCode !== locale) {
+  //     const newRoute = currentRoute.replace(countryCode, locale)
+  //     redirect(newRoute)
+  //   }
+  // }, [])
 
   return (
     <>
