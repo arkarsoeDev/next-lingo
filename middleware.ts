@@ -7,13 +7,13 @@ const handleI18nRouting = createMiddleware(routing);
 
 const customMiddleware = async (request: NextRequest) => {
   const ip = request.headers.get('x-forwarded-for') || 'unknown'
+  let userCountry = await getUserCountry(ip)
+  let localeCode = userCountry.countryCode.toLowerCase()
 
   const storedLocale = (request.cookies.get('NEXT_LOCALE')?.value || 'false') === 'true'
   // response.headers.set('x-user-ip', ip)
 
   if (!storedLocale) {
-    let userCountry = await getUserCountry(ip)
-    let localeCode = userCountry.countryCode.toLowerCase()
     const [, locale, ...segments] = request.nextUrl.pathname.split('/');
     request.nextUrl.pathname = `/${localeCode}/${segments.join('/')}`;
     request.cookies.set('NEXT_LOCALE', localeCode)
