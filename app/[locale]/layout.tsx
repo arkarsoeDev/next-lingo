@@ -27,28 +27,28 @@ export default async function LocaleLayout({
   }
 
 
-  if (locale) {
-    userLocale = locale
-  } else if (headerList.get('x-user-ip')) {
-    console.log(headerList.get('x-user-ip'))
-    let userIp = headerList.get('x-user-ip') || 'en'
+  // if (locale) {
+  //   userLocale = locale
+  // } else if (headerList.get('x-user-ip')) {
+  //   console.log(headerList.get('x-user-ip'))
+  //   let userIp = headerList.get('x-user-ip') || 'en'
 
-    let userCountry = await getUserCountry(userIp) || 'en'
-    userLocale = userCountry.countryCode.toLowerCase()
-  }
+  //   let userCountry = await getUserCountry(userIp) || 'en'
+  //   userLocale = userCountry.countryCode.toLowerCase()
+  // }
 
   // Enable static rendering
-  setRequestLocale(userLocale);
+  setRequestLocale(locale);
 
   // Providing all messages to the client
   // side is the easiest way to get started
   const messages = await getMessages();
 
   return (
-    <html lang={userLocale}>
+    <html lang={locale}>
       <body>
         <NextIntlClientProvider messages={messages}>
-          <Options locale={userLocale} />
+          <Options locale={locale} />
           {children}
         </NextIntlClientProvider>
       </body>
