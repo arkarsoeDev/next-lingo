@@ -5,29 +5,37 @@ import { getUserCountry } from './actions/getUserCountry';
 
 const handleI18nRouting = createMiddleware(routing);
 
-const customMiddleware = async (request: NextRequest) => {
+const customMiddleware = async (request: NextRequest, response: NextResponse) => {
   const ip = request.headers.get('x-forwarded-for') || 'unknown'
-
+  let userCountry = await getUserCountry(ip)
+  let localeCode = userCountry.countryCode.toLowerCase()
   const storedLocale = (request.cookies.get('NEXT_LOCALE')?.value || 'false') === 'true'
   // response.headers.set('x-user-ip', ip)
 
   // if (!storedLocale) {
-  let userCountry = await getUserCountry(ip)
-  let localeCode = userCountry.countryCode.toLowerCase()
-  const [, locale, ...segments] = request.nextUrl.pathname.split('/');
-  request.nextUrl.pathname = `/${localeCode}/${segments.join('/')}`;
-  request.cookies.set('NEXT_LOCALE', localeCode)
+
+  // const [, locale, ...segments] = request.nextUrl.pathname.split('/');
+  // request.nextUrl.pathname = `/${localeCode}/${segments.join('/')}`;
+  // request.cookies.set('NEXT_LOCALE', localeCode)
   // }
 
-  return request
+
+  if (!storedLocale) {
+    const [, locale, ...segments] = request.nextUrl.pathname.split('/');
+    request.nextUrl.pathname = `/${localeCode}/${segments.join('/')}`;
+
+    response = NextResponse.rewrite(request.nextUrl);
+    response.cookies.set('NEXT_LOCALE', localeCode);
+  }
+
+  return response
 }
 
 export async function middleware(request: NextRequest) {
-  const newRequest = await customMiddleware(request)
-  const response = handleI18nRouting(newRequest);
+  const response = handleI18nRouting(request);
+  return customMiddleware(request, response)
 
   // A `response` can now be passed here
-  return response;
 }
 
 export const config = {
