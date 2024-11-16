@@ -1,5 +1,6 @@
 'use client'
 
+import { getCountryCodeFromUrl } from "@/util";
 import { redirect, usePathname } from "next/navigation";
 import { ChangeEvent, useEffect } from "react";
 

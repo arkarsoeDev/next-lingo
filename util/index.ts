@@ -1,4 +1,4 @@
-function getCountryCodeFromUrl(url: string) {
+export const getCountryCodeFromUrl = (url: string) => {
   const regex = /^\/([a-z]{2})(?=\/|$)/i; // Case-insensitive with 'i' flag
   const path = new URL(url).pathname; // Extracts the path from the full URL
   const match = path.match(regex);
