@@ -45,7 +45,7 @@ export default async function LocaleLayout({
   userLocale = userCountry.countryCode.toLowerCase()
 
   // Enable static rendering
-  setRequestLocale(locale);
+  setRequestLocale(userLocale);
 
   // Providing all messages to the client
   // side is the easiest way to get started
