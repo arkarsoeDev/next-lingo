@@ -16,6 +16,7 @@ const customMiddleware = async (request: NextRequest) => {
 
   if (!storedLocale) {
     request.nextUrl.pathname = `/${localeCode}/${segments.join('/')}`;
+    request.cookies.set('NEXT_LOCALE', localeCode)
   }
 
   return request
