@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import Options from '@/componnets/options';
 import { headers } from 'next/headers';
+import { getUserCountry } from '@/actions/getUserCountry';
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -27,7 +28,9 @@ export default async function LocaleLayout({
 
   if (headerList.get('x-user-ip')) {
     console.log(headerList.get('x-user-ip'))
-    userLocale = headerList.get('x-user-ip') || 'en'
+    let userIp = headerList.get('x-user-ip') || 'en'
+
+    userLocale = await getUserCountry(userIp) || 'en'
   }
 
   // Enable static rendering
