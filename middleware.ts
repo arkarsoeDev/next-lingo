@@ -5,7 +5,7 @@ import { getUserCountry } from './actions/getUserCountry';
 
 const handleI18nRouting = createMiddleware(routing);
 
-const customMiddleware = async (request: NextRequest, response: NextResponse) => {
+const customMiddleware = async (request: NextRequest) => {
   const ip = request.headers.get('x-forwarded-for') || 'unknown'
   let userCountry = await getUserCountry(ip) || 'en'
   let localeCode = userCountry.countryCode.toLowerCase()
@@ -18,14 +18,15 @@ const customMiddleware = async (request: NextRequest, response: NextResponse) =>
     request.nextUrl.pathname = `/${localeCode}/${segments.join('/')}`;
   }
 
-  return response
+  return request
 }
 
 export async function middleware(request: NextRequest) {
-  const response = handleI18nRouting(request);
+  const newRequest = await customMiddleware(request)
+  const response = handleI18nRouting(newRequest);
 
   // A `response` can now be passed here
-  return await customMiddleware(request, response);
+  return response;
 }
 
 export const config = {
