@@ -3,7 +3,7 @@ import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import Options from '@/componnets/options';
-import { headers } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { getUserCountry } from '@/actions/getUserCountry';
 
 export function generateStaticParams() {
@@ -29,15 +29,15 @@ export default async function LocaleLayout({
   // userLocale = await getUserCountry("69.160.26.126") || 'en'
   // console.log(userLocale)
 
-  if (headerList.get('x-user-ip')) {
+  if (locale) {
+    userLocale = locale
+  } else if (headerList.get('x-user-ip')) {
     console.log(headerList.get('x-user-ip'))
     let userIp = headerList.get('x-user-ip') || 'en'
 
     let userCountry = await getUserCountry(userIp) || 'en'
     userLocale = userCountry.countryCode.toLowerCase()
   }
-
-
 
   // Enable static rendering
   setRequestLocale(locale);
