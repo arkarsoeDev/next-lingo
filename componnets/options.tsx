@@ -17,7 +17,7 @@ const Options = ({ locale }: { locale: string }) => {
       <p>{currentRoute}, current locales is {locale}</p>
       <select value={locale} onChange={handleOnChange} name="" id="">
         <option value="en" >English</option>
-        <option value="id" >Indo</option>
+        <option value="mm" >mm</option>
       </select>
     </>
   )

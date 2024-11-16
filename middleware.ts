@@ -21,5 +21,5 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   // Match only internationalized pathnames
-  matcher: ['/', '/(id|en)/:path*']
+  matcher: ['/', '/(mm|en)/:path*']
 };

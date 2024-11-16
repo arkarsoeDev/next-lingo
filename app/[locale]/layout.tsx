@@ -22,16 +22,22 @@ export default async function LocaleLayout({
   let userLocale = 'en'
 
   // Ensure that the incoming `locale` is valid
-  if (!routing.locales.includes(locale as "en" | "id")) {
+  if (!routing.locales.includes(locale as "en" | "mm")) {
     notFound();
   }
+
+  // userLocale = await getUserCountry("69.160.26.126") || 'en'
+  // console.log(userLocale)
 
   if (headerList.get('x-user-ip')) {
     console.log(headerList.get('x-user-ip'))
     let userIp = headerList.get('x-user-ip') || 'en'
 
-    userLocale = await getUserCountry(userIp) || 'en'
+    let userCountry = await getUserCountry("69.160.26.126") || 'en'
+    userLocale = userCountry.countryCode
   }
+
+
 
   // Enable static rendering
   setRequestLocale(locale);
