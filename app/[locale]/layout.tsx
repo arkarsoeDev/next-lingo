@@ -29,15 +29,20 @@ export default async function LocaleLayout({
   // userLocale = await getUserCountry("69.160.26.126") || 'en'
   // console.log(userLocale)
 
-  if (locale) {
-    userLocale = locale
-  } else if (headerList.get('x-user-ip')) {
-    console.log(headerList.get('x-user-ip'))
-    let userIp = headerList.get('x-user-ip') || 'en'
+  // if (locale) {
+  //   userLocale = locale
+  // } else if (headerList.get('x-user-ip')) {
+  //   console.log(headerList.get('x-user-ip'))
+  //   let userIp = headerList.get('x-user-ip') || 'en'
 
-    let userCountry = await getUserCountry(userIp) || 'en'
-    userLocale = userCountry.countryCode.toLowerCase()
-  }
+  //   let userCountry = await getUserCountry(userIp) || 'en'
+  //   userLocale = userCountry.countryCode.toLowerCase()
+  // }
+
+  let userIp = headerList.get('x-user-ip') || 'en'
+
+  let userCountry = await getUserCountry(userIp) || 'en'
+  userLocale = userCountry.countryCode.toLowerCase()
 
   // Enable static rendering
   setRequestLocale(locale);
