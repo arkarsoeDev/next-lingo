@@ -33,7 +33,7 @@ export default async function LocaleLayout({
     console.log(headerList.get('x-user-ip'))
     let userIp = headerList.get('x-user-ip') || 'en'
 
-    let userCountry = await getUserCountry("69.160.26.126") || 'en'
+    let userCountry = await getUserCountry(userIp) || 'en'
     userLocale = userCountry.countryCode.toLowerCase()
   }
 
