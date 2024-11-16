@@ -1,6 +1,6 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
-import { notFound, redirect, usePathname } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import Options from '@/componnets/options';
 import { cookies, headers } from 'next/headers';
@@ -20,7 +20,6 @@ export default async function LocaleLayout({
   const { locale } = await params
   const headerList = await headers()
   let userLocale = 'en'
-  const currentRoute = usePathname()
 
   // Ensure that the incoming `locale` is valid
   if (!routing.locales.includes(locale as "en" | "mm")) {
@@ -44,11 +43,6 @@ export default async function LocaleLayout({
 
   let userCountry = await getUserCountry(userIp) || 'en'
   userLocale = userCountry.countryCode.toLowerCase()
-
-  if (locale !== userLocale) {
-    const newRoute = currentRoute.replace(locale, userLocale)
-    redirect(newRoute)
-  }
 
   // Enable static rendering
   setRequestLocale(locale);

@@ -1,7 +1,7 @@
 'use client'
 
 import { redirect, usePathname } from "next/navigation";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useEffect } from "react";
 
 
 const Options = ({ locale }: { locale: string }) => {
@@ -11,6 +11,15 @@ const Options = ({ locale }: { locale: string }) => {
     const newRoute = currentRoute.replace(locale, e.target.value)
     redirect(newRoute)
   }
+
+  useEffect(() => {
+    const countryCode = getCountryCodeFromUrl(currentRoute) || 'en'
+
+    if (countryCode !== locale) {
+      const newRoute = currentRoute.replace(countryCode, locale)
+      redirect(newRoute)
+    }
+  }, [])
 
   return (
     <>
