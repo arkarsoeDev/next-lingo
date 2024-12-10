@@ -5,6 +5,7 @@ import { routing } from '@/i18n/routing';
 import Options from '@/components/options';
 import { headers } from 'next/headers';
 import { ModalProvider } from '@/providers/modal-provider'
+import "../globals.css"
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -33,7 +34,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale}>
-      <body>
+      <body className='bg-black'>
         <NextIntlClientProvider messages={messages}>
           <Options locale={locale} />
           <ModalProvider />

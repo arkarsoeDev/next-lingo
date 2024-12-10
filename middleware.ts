@@ -32,8 +32,8 @@ export async function middleware(request: NextRequest) {
 
   if (!storedLocale) {
     const ip = request.headers.get('x-forwarded-for') || 'unknown'
-    let userCountry = await getUserCountry(ip)
-    let localeCode = userCountry.countryCode.toLowerCase()
+    // let userCountry = await getUserCountry(ip)
+    let localeCode = 'tetin'
     // request.nextUrl.pathname = `/${localeCode}/${segments.join('/')}`;
     // request.cookies.set('NEXT_LOCALE', localeCode)
     // return NextResponse.rewrite(new URL(`/${'mm'}/${segments.join('/')}`, request.url))
