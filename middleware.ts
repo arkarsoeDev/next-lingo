@@ -10,47 +10,42 @@ const customMiddleware = async (request: NextRequest) => {
   const ip = request.headers.get('x-forwarded-for') || 'unknown'
   let response
   const storedLocale = (request.cookies.get('NEXT_LOCALE')?.value || 'false') === 'true'
-  // response.headers.set('x-user-ip', ip)
 
   if (!storedLocale) {
-    // let userCountry = await getUserCountry(ip)
-    // let localeCode = userCountry.countryCode.toLowerCase()
     const [, locale, ...segments] = request.nextUrl.pathname.split('/');
-    // request.nextUrl.pathname = `/${localeCode}/${segments.join('/')}`;
     response = NextResponse.redirect(`/${'mm'}/${segments.join('/')}`)
-    // request.cookies.set('NEXT_LOCALE', localeCode)
   }
 }
 
 export async function middleware(request: NextRequest) {
-  // request.cookies.delete('NEXT_LOCALE')
   const storedLocale = request.cookies.get('NEXT_LOCALE')?.value || false
+  const [, locale, ...segments] = request.nextUrl.pathname.split('/');
   const cookieStore = await cookies()
-  // response.headers.set('x-user-ip', ip)
+
+  const maintain = true
 
   console.log(storedLocale)
 
   if (!storedLocale) {
     const ip = request.headers.get('x-forwarded-for') || 'unknown'
-    // let userCountry = await getUserCountry(ip)
-    let localeCode = 'tetin'
-    // request.nextUrl.pathname = `/${localeCode}/${segments.join('/')}`;
-    // request.cookies.set('NEXT_LOCALE', localeCode)
-    // return NextResponse.rewrite(new URL(`/${'mm'}/${segments.join('/')}`, request.url))
+    let userCountry = await getUserCountry(ip)
+    let localeCode = userCountry.countryCode.toLowerCase()
     console.log('passing here')
 
-    const [, locale, ...segments] = request.nextUrl.pathname.split('/');
-    // request.cookies.set('NEXT_LOCALE', 'mm')
+
     cookieStore.set('NEXT_LOCALE', localeCode)
-    const response = NextResponse.redirect(new URL(`/${localeCode}/${segments.join('/')}`, request.url))
+    const response = maintain ?
+      NextResponse.redirect(new URL(`/${localeCode}/${segments.join('/')}`, request.url)) :
+      NextResponse.redirect(new URL(`/${localeCode}/maintain`, request.url))
     return response
   }
 
-  // return NextResponse.rewrite(new URL(`/${'mm'}/${segments.join('/')}`, request.url))
+  if (maintain) {
+    return NextResponse.redirect(new URL(`/${locale}/maintain`, request.url))
+  }
+
   const response = handleI18nRouting(request);
-  console.log('this is working')
-  // console.log(response)
-  // A `response` can now be passed here
+
   return response;
 }
 

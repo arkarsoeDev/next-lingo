@@ -34,7 +34,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale}>
-      <body className='bg-black'>
+      <body className=''>
         <NextIntlClientProvider messages={messages}>
           <Options locale={locale} />
           <ModalProvider />
