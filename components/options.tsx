@@ -9,7 +9,9 @@ const Options = ({ locale }: { locale: string }) => {
   const currentRoute = usePathname()
 
   const handleOnChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    console.log(e.target.value)
     const newRoute = currentRoute.replace(locale, e.target.value)
+    console.log(newRoute)
     redirect(newRoute)
   }
 

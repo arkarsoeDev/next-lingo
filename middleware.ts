@@ -6,17 +6,6 @@ import { cookies } from 'next/headers';
 
 const handleI18nRouting = createMiddleware(routing);
 
-const customMiddleware = async (request: NextRequest) => {
-  const ip = request.headers.get('x-forwarded-for') || 'unknown'
-  let response
-  const storedLocale = (request.cookies.get('NEXT_LOCALE')?.value || 'false') === 'true'
-
-  if (!storedLocale) {
-    const [, locale, ...segments] = request.nextUrl.pathname.split('/');
-    response = NextResponse.redirect(`/${'mm'}/${segments.join('/')}`)
-  }
-}
-
 export async function middleware(request: NextRequest) {
   const storedLocale = request.cookies.get('NEXT_LOCALE')?.value || false
   const [, locale, ...segments] = request.nextUrl.pathname.split('/');
@@ -24,24 +13,32 @@ export async function middleware(request: NextRequest) {
 
   const maintain = true
 
-  console.log(storedLocale)
-
   if (!storedLocale) {
     const ip = request.headers.get('x-forwarded-for') || 'unknown'
     let userCountry = await getUserCountry(ip)
-    let localeCode = userCountry.countryCode.toLowerCase()
-    console.log('passing here')
+    let localeCode = userCountry.countryCode.toLowerCase() || 'en'
 
+    let redirectUrl: URL = new URL(`/${localeCode}/${segments.join('/')}`, request.url)
+
+    if (maintain) {
+      if (new URL(`/${localeCode}/maintain`, request.url).pathname !== request.nextUrl.pathname) {
+        redirectUrl = new URL(`/${localeCode}/maintain`, request.url)
+      }
+    } else if (request.nextUrl.pathname === `/${storedLocale}/maintain`) {
+      return NextResponse.redirect(new URL(`/${storedLocale}`, request.url))
+    }
 
     cookieStore.set('NEXT_LOCALE', localeCode)
-    const response = maintain ?
-      NextResponse.redirect(new URL(`/${localeCode}/${segments.join('/')}`, request.url)) :
-      NextResponse.redirect(new URL(`/${localeCode}/maintain`, request.url))
+    const response = NextResponse.redirect(redirectUrl)
     return response
   }
 
   if (maintain) {
-    return NextResponse.redirect(new URL(`/${locale}/maintain`, request.url))
+    if (new URL(`/${storedLocale}/maintain`, request.url).pathname !== request.nextUrl.pathname) {
+      return NextResponse.redirect(new URL(`/${storedLocale}/maintain`, request.url))
+    }
+  } else if (request.nextUrl.pathname === `/${storedLocale}/maintain`) {
+    return NextResponse.redirect(new URL(`/${storedLocale}`, request.url))
   }
 
   const response = handleI18nRouting(request);
